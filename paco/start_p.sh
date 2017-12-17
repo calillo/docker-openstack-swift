@@ -14,9 +14,7 @@ SWIFT_OBJECT_NODES=${SWIFT_OBJECT_NODES:-172.17.0.3:6000:d1;172.17.0.3:6000:d2;1
 
 
 if [ -e /srv/swift/account.builder ]; then
-	echo "Ring files already exist in /srv, copying them to /etc/swift..."
-	cp -p /srv/swift/*.builder /etc/swift/
-	cp -p /srv/swift/*.gz /etc/swift/
+	rm -rf /srv/swift/*
 fi
 
 # This comes from a volume, so need to chown it here, not sure of a better way
@@ -103,4 +101,4 @@ sleep 3
 
 echo "Starting to tail /var/log/syslog...(hit ctrl-c if you are starting the container in a bash shell)"
 
-#tail -n 0 -f /var/log/syslog
+tail -n 0 -f /var/log/syslog

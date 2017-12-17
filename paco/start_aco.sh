@@ -9,6 +9,7 @@
 #SWIFT_PART_HOURS=${SWIFT_PART_HOURS:-1}
 #SWIFT_REPLICAS=${SWIFT_REPLICAS:-1}
 #SWIFT_OWORKERS=${SWIFT_OWORKERS:-8}
+SWIFT_DISK_SIZE=20MB
 SWIFT_DEVICE=${SWIFT_DEVICE:-d1:d2}
 #SWIFT_SCP_COPY=${SWIFT_SCP_COPY:-root@192.168.0.171:~/files:kevin}
 
@@ -20,6 +21,7 @@ fi
 
 # This comes from a volume, so need to chown it here, not sure of a better way
 # to get it owned by Swift.
+mkdir /srv/disk
 mkdir /srv/node
 chown -R swift:swift /srv
 
@@ -30,7 +32,11 @@ cd /etc/swift
 #	mount /dev/$device /srv/node/$device -t ext4 -o noatime,nodiratime,nobarrier,user_xattr
 #done
 for device  in $(echo $SWIFT_DEVICE | tr ":" "\n"); do
+	truncate -s $SWIFT_DISK_SIZE /srv/disk/$device
+	mkfs.xfs /srv/disk/$device	
 	mkdir -p /srv/node/$device
+	echo "/srv/disk/$device /srv/node/$device xfs loop,noatime,nodiratime,nobarrier,logbufs=8 0 0" >> /etc/fstab
+	mount /dev/disk/$device
 done
 
 chown -R swift:swift /srv
@@ -98,4 +104,4 @@ sleep 3
 
 echo "Starting to tail /var/log/syslog...(hit ctrl-c if you are starting the container in a bash shell)"
 
-#tail -n 0 -f /var/log/syslog
+tail -n 0 -f /var/log/syslog

@@ -10,9 +10,16 @@ build image
 docker build -t calillo/docker-openstack-swift:latest docker-openstack-swift
 ```
 
-3 times
+start containers
 ```bash
-docker run -v my-swift-conf:/srv/swift -it [id] /bin/bash
+docker run -v my-swift-conf:/srv/swift -p 8080:8080 -h proxy --name proxy -it -d calillo/docker-openstack-swift /usr/local/bin/start_p.sh
+docker run --privileged -v my-swift-conf:/srv/swift -h node1 --name node1 -it -d calillo/docker-openstack-swift /usr/local/bin/start_aco.sh
+docker run --privileged -v my-swift-conf:/srv/swift -h node2 --name node2 -it -d calillo/docker-openstack-swift /usr/local/bin/start_aco.sh
+```
+
+run bash on container
+```bash
+docker exec -it proxy /bin/bash
 ```
 
 start swift
@@ -20,6 +27,11 @@ start swift
 /usr/local/bin/start_p.sh
 /usr/local/bin/start_aco.sh
 /usr/local/bin/start_aco.sh
+```
+
+stop/remove all container
+```bash
+docker rm $(docker ps -a -q)
 ```
 
 exit container
