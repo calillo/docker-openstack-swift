@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  proxy:
+    image: calillo/docker-openstack-swift:latest
+    hostname: proxy
+    volumes:
+      - my-swift-conf:/srv/swift
+#    ports:
+#      - 8080:8080
+    command:
+      - /usr/local/bin/start_p.sh
+
+  node:
+    image: calillo/docker-openstack-swift:latest
+    hostname: node
+    deploy:
+      replicas: 2
+    privileged: true
+    volumes:
+      - my-swift-conf:/srv/swift
+    command:
+      - /usr/local/bin/start_aco.sh
+    depends_on:
+      - proxy
+
+volumes:
+  my-swift-conf:
+

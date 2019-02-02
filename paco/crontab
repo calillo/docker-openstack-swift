@@ -1,0 +1,2 @@
+*/5 * * * * rsync -a /srv/swift/ /etc/swift/
+# Mandatory blank line
