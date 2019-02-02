@@ -2,6 +2,8 @@ FROM ubuntu:16.04
 
 MAINTAINER calillo
 
+ENV DEBIAN_FRONTEND=noninteractive
+
 RUN apt-get update
 RUN apt-get -y dist-upgrade
 RUN apt-get install -y net-tools less vim iputils-ping telnet
@@ -21,6 +23,11 @@ ADD paco/start_aco.sh           /usr/local/bin/start_aco.sh
 
 RUN chmod 755 /usr/local/bin/*.sh
 RUN mkdir /srv/swift
+
+ADD paco/crontab /etc/cron.d/ring-sync
+RUN chmod 0644 /etc/cron.d/ring-sync
+RUN crontab /etc/cron.d/ring-sync
+RUN service cron start
 
 EXPOSE 8080
 EXPOSE 6000 6001 6002
