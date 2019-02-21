@@ -49,7 +49,7 @@ docker-compose -p swift up --scale node=2 -d
 
 stop/remove all container
 ```bash
-docker-compose -p swift down --volume
+docker-compose -p swift down --volumes
 ```
 
 ## swift test command
