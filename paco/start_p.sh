@@ -47,7 +47,7 @@ cp -p *.builder /srv/swift
 # wait until one node come up
 while [ ! -f /srv/swift/account.ring.gz ]
 do
-    sleep 2
+    sleep 5
 done
 echo "Ring files already exist in /srv, copying them to /etc/swift..."
 cp -p /srv/swift/*.builder /etc/swift/
@@ -60,7 +60,5 @@ swift-init start proxy
 
 # sleep waiting for rsyslog to come up under supervisord
 sleep 3
-
 echo "Starting to tail /var/log/syslog...(hit ctrl-c if you are starting the container in a bash shell)"
-
 tail -n 0 -f /var/log/syslog

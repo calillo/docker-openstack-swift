@@ -6,8 +6,8 @@ services:
     hostname: proxy
     volumes:
       - my-swift-conf:/srv/swift
-#    ports:
-#      - 8080:8080
+    ports:
+      - 8080:8080
     command:
       - /usr/local/bin/start_p.sh
 

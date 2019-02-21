@@ -6,12 +6,14 @@ SWIFT_PORT=6000
 SWIFT_DISK_SIZE=${SWIFT_DISK_SIZE:-20MB}
 SWIFT_DEVICE=${SWIFT_DEVICE:-d1:d2:d3}
 
-# get ring files
-if [ -e /srv/swift/account.builder ]; then
-  echo "Ring files already exist in /srv, copying them to /etc/swift..."
-  cp -p /srv/swift/*.builder /etc/swift/
-  cp -p /srv/swift/*.gz /etc/swift/
-fi
+# wait until proxy create ring
+while [ ! -f /srv/swift/account.builder ]
+do
+    sleep 5
+done
+echo "Ring files already exist in /srv, copying them to /etc/swift..."
+cp -p /srv/swift/*.builder /etc/swift/
+cp -p /srv/swift/*.gz /etc/swift/
 
 # create disk devices
 mkdir /srv/disk
